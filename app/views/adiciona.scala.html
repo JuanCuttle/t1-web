@@ -1,0 +1,15 @@
+@tags.cabecalho("Adiciona Contato")
+
+<form action="@routes.Application.adicione" method="post">
+	<table>
+	<tr><td>Nome:</td>
+		<td> <input type="text" name="nome" size="60"></td></tr>
+	<tr><td>Cód. de Área:</td>
+		<td><input type="text" name="area" size="2"></td></tr>
+	<tr><td>Número:</td>
+		<td><input type="text" name="numero" size="10"></td></tr>
+	</table>
+	<input type="submit"  value="Adicione">
+</form>	
+
+<a href="@routes.Application.index">[Home]</a>

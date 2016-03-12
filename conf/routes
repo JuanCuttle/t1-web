@@ -1,0 +1,10 @@
+# Página inicial
+GET     /                           controllers.Application.index
+
+GET		/adicionar					controllers.Application.adicionar
+
+GET		/pesquisarPorArea			controllers.Application.pesquisarPorArea
+
+POST	/contato/adicione			controllers.Application.adicione
+
+POST	/contato/pesquisarPorArea   controllers.Application.pesquisePorArea

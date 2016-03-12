@@ -1,0 +1,8 @@
+@(agenda: models.dados.Agenda)
+
+@tags.cabecalho("Contatos")
+
+@tags.mostraAgenda(agenda)
+
+[<a href="@routes.Application.adicionar">Adicionar</a> ||
+ <a href="@routes.Application.pesquisarPorArea">Pesquisar por Área</a>]

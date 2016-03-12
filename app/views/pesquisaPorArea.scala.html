@@ -1,0 +1,15 @@
+@(area: Option[Int] = None, agenda: Option[models.dados.Agenda] = None)
+
+@tags.cabecalho("Pesquisa por Área")
+
+<form action="@routes.Application.pesquisePorArea" method="post">
+	Área: <input type="text" name="area" size="2">
+	<input type="submit" value="Pesquise">
+</form>	
+
+@area match {
+		case None => {<p>Digite a área</p>}
+		case Some(a) => {@tags.agendaPorArea(a, agenda.get)}
+	}
+
+<a href="@routes.Application.index">[Home]</a>

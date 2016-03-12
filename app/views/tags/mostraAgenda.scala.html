@@ -1,0 +1,19 @@
+@(agenda: models.dados.Agenda)
+
+@agenda.numContatos match {
+	case 0 => {<p>Nenhum contato registrado.</p>}
+	case _ => {
+		<p>A agenda possui @agenda.numContatos contato(s) cadastrado(s).</p>
+
+		<table border="1">
+			<tr><th>Nome</th><th>Telefone</th></tr>
+
+			@for((nome,contato) <- agenda.contatos) {
+       			<tr>
+       				<td>@nome</td>
+       	   			<td>(@contato.telefone.area) @contato.telefone.numero</td>
+       			</tr>
+			}
+		</table>	
+	}
+}
