@@ -1,21 +1,24 @@
 package controllers
 
-import play.api.mvc.{Controller, Action}
+import play.api.mvc.{AbstractController, ControllerComponents,Action}
 import play.api.data.Form
 import play.api.data.Forms.{tuple, text, number}
+
+import javax.inject.{Singleton,Inject}
 
 import models.dados.{Agenda, Contato, Telefone}
 import models.CRUD
 
-class Application extends Controller {
-  
+@Singleton
+class Application @Inject() (cc: ControllerComponents) extends AbstractController(cc) {
+
   def index = Action {
     val crud = new CRUD
     val agenda = crud.pesquiseTodos
 
     Ok(views.html.index(agenda))
   }
-  
+
   def adicionar = Action {
     Ok(views.html.adiciona())
   }

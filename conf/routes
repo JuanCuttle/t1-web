@@ -5,6 +5,8 @@ GET		/adicionar					controllers.Application.adicionar
 
 GET		/pesquisarPorArea			controllers.Application.pesquisarPorArea
 
++nocsrf
 POST	/contato/adicione			controllers.Application.adicione
 
++nocsrf
 POST	/contato/pesquisarPorArea   controllers.Application.pesquisePorArea
