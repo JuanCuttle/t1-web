@@ -1,6 +1,9 @@
+@()(implicit rh: RequestHeader)
+
 @tags.cabecalho("Adiciona Contato")
 
 <form action="@routes.Application.adicione" method="post">
+	@helper.CSRF.formField
 	<table>
 	<tr><td>Nome:</td>
 		<td> <input type="text" name="nome" size="60"></td></tr>
@@ -10,6 +13,6 @@
 		<td><input type="text" name="numero" size="10"></td></tr>
 	</table>
 	<input type="submit"  value="Adicione">
-</form>	
+</form>
 
 <a href="@routes.Application.index">[Home]</a>

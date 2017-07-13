@@ -19,11 +19,11 @@ class Application @Inject() (cc: ControllerComponents) extends AbstractControlle
     Ok(views.html.index(agenda))
   }
 
-  def adicionar = Action {
+  def adicionar = Action { implicit request =>
     Ok(views.html.adiciona())
   }
 
-  def pesquisarPorArea = Action {
+  def pesquisarPorArea = Action { implicit request =>
     Ok(views.html.pesquisaPorArea())
   }
 
