@@ -1,17 +1,17 @@
 @(agenda: models.dados.Agenda)
 
-@agenda.numContatos match {
-	case 0 => {<p>Nenhum contato registrado.</p>}
+@agenda.numLicitacoes match {
+	case 0 => {<p>Nenhuma licitação registrada.</p>}
 	case _ => {
-		<p>A agenda possui @agenda.numContatos contato(s) cadastrado(s).</p>
+		<p>A agenda possui @agenda.numLicitacoes licitação(ões) cadastrada(s).</p>
 
 		<table border="1">
-			<tr><th>Nome</th><th>Telefone</th></tr>
+			<tr><th>Id da licitação</th><th>Descrição</th></tr>
 
-			@for((nome,contato) <- agenda.contatos) {
+			@for((nome,licitacao) <- agenda.licitacoes) {
        			<tr>
-       				<td>@nome</td>
-       	   			<td>(@contato.telefone.area) @contato.telefone.numero</td>
+       				<td>@licitacao.id</td>
+       	   			<td>@licitacao.nome</td>
        			</tr>
 			}
 		</table>	

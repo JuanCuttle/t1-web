@@ -1,18 +1,23 @@
 @()(implicit rh: RequestHeader)
 
-@tags.cabecalho("Adiciona Contato")
+@tags.cabecalho("Adiciona Licitação")
+
+<title>T1 - Programação para Web</title>
 
 <form action="@routes.Application.adicione" method="post">
 	@helper.CSRF.formField
 	<table>
-	<tr><td>Nome:</td>
-		<td> <input type="text" name="nome" size="60"></td></tr>
-	<tr><td>Cód. de Área:</td>
-		<td><input type="text" name="area" size="2"></td></tr>
-	<tr><td>Número:</td>
+	<tr><td>Id da licitação:</td>
+		<td> <input type="text" name="id" size="2"></td></tr>
+	<tr><td>Descricao:</td>
+		<td><input type="text" name="nome" size="50"></td></tr>
+	<!-- <tr><td>Número:</td>
 		<td><input type="text" name="numero" size="10"></td></tr>
+	<tr><td>Idade:</td>
+		<td><input type="text" name="idade" size="3"></td></tr> -->
 	</table>
 	<input type="submit"  value="Adicione">
 </form>
 
-<a href="@routes.Application.index">[Home]</a>
+
+<a href="@routes.Application.index">[Home]</a> || <a href="@routes.Application.pesquisarPorId">[Adicionar item]</a>

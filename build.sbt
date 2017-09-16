@@ -1,4 +1,4 @@
-name := """demoTemplateEngine"""
+name := """t1"""
 
 version := "1.0-SNAPSHOT"
 
