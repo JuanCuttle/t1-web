@@ -1,0 +1,20 @@
+@(idL: Int, agenda: models.dados.Agenda)
+
+@agenda.licitacoes(idL).itens.size match {
+	case 0 => {<p>Nenhum item registrado.</p>}
+	case _ => {
+		<p>A licitacao possui @agenda.licitacoes(idL).numItens item(ns) cadastrado(s).</p>
+
+		<table border="1">
+			<tr><th>Id do item</th><th>Nome</th><th>Quantidade</th></tr>
+
+			@for((id, item) <- agenda.licitacoes(idL).itens) {
+       			<tr>
+       				<td>@item.id</td>
+       	   			<td>@item.nome</td>
+				<td>@item.numero</td>
+       			</tr>
+			}
+		</table>	
+	}
+}

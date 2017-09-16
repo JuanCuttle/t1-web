@@ -1,0 +1,18 @@
+@(area: Option[Int] = None, agenda: Option[models.dados.Agenda] = None)(implicit rh: RequestHeader)
+
+@tags.cabecalho("Licitação alterada")
+
+<form action="@routes.Application.pesquisePorArea" method="post">
+	@helper.CSRF.formField
+	Id da licitação: <input type= "text" name="lici
+	Nome do item: <input type= "text" name="nome" size="2">
+	Quantidade: <input type= "text" name="quantidade" size="5">
+	<input type="submit" value="Adicionar">
+</form>
+
+@area match {
+		case None => {<p>Digite o nome do item</p>}
+		case Some(a) => {@tags.agendaPorArea(a, agenda.get)}
+	}
+
+<a href="@routes.Application.index">[Home]</a>
