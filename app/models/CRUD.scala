@@ -5,7 +5,7 @@ import models.dados.Licitacao
 import models.dados.Produto
 
 class CRUD {
-  val agenda = BD.leia
+  var agenda = BD.leia
 
   def pesquiseTodos = agenda
 
@@ -25,13 +25,22 @@ def adicione(licitacao: Licitacao) = {
   	agendaAdicionada
   }
 
+def remova(id: Int) = {
+	val agendaRemovida = agenda.remova(id)
+	BD.salve(agendaRemovida)
+	agendaRemovida
+}
+
 def adicioneProduto(idLicitacao: Int, produto: Produto) = {
 	
-	val agendaAdicionada = agenda.adicioneProduto(idLicitacao, produto)
-	
+	var agendaAdicionada = agenda.adicioneProduto(idLicitacao, produto)
+
+	//println(s"novaLic2: ${agendaAdicionada.licitacoes(idLicitacao)}")	
 	BD.salve(agendaAdicionada)
+
+	//this.pesquisePorId(idLicitacao)
 	
-	agendaAdicionada
+	this.agenda = agendaAdicionada
 
   }
 

@@ -3,8 +3,12 @@ GET     /                           controllers.Application.index
 
 GET		/adicionar					controllers.Application.adicionar
 
+GET		/remover			controllers.Application.remover
+
 GET		/pesquisarPorId			controllers.Application.pesquisarPorId
 
 POST	/contato/adicione			controllers.Application.adicione
+
+POST	/contato/remova				controllers.Application.remova
 
 POST	/contato/pesquisarPorId   controllers.Application.pesquisePorId
