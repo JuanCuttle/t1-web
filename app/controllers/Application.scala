@@ -31,6 +31,10 @@ class Application @Inject() (cc: ControllerComponents) extends AbstractControlle
     Ok(views.html.pesquisaPorId())
   }
 
+  def removerProduto = Action { implicit request =>
+    Ok(views.html.removaProduto())
+  }
+
   def adicione = Action { implicit request =>
   	//val form = Form(tuple("nome" -> text, "area" -> number, "numero" -> number, "idade" -> number))
 	val form = Form(tuple("id" -> number, "nome" -> text))
@@ -57,23 +61,27 @@ class Application @Inject() (cc: ControllerComponents) extends AbstractControlle
 
   def pesquisePorId = Action { implicit request =>
     //val form = Form("area" -> number)
+
     val form = Form(tuple("idLicitacao" -> number, "id" -> number, "nome" -> text, "quantidade" -> number))
     val (idLicitacao, id, nome, quantidade) = form.bindFromRequest.get
     var crud = new CRUD
 
-    //val produto = new Produto(id, nome, quantidade)
-
     crud.adicioneProduto(idLicitacao, Produto(id, nome, quantidade))
-
-    //crud = new CRUD(agenda)
 
     val licitacao = crud.pesquisePorId(idLicitacao)
 
-    //println(s"itens: ${licitacao}")
-
-    //Thread.sleep(2000)
-    
     Ok(views.html.pesquisaPorId(Some(idLicitacao), Some(licitacao)))
-    //Ok(views.html.pesquisaPorId(Some(idLicitacao), Some(itensLicitacao)))
+  }
+
+  def removaProduto = Action { implicit request =>
+    val form = Form(tuple("idLicitacao" -> number, "idProduto" -> number))
+    val (idLicitacao, idProduto) = form.bindFromRequest.get
+    var crud = new CRUD
+
+    crud.removaProduto(idLicitacao, idProduto)
+
+    val licitacao = crud.pesquisePorId(idLicitacao)
+    Ok(views.html.pesquisaPorId(Some(idLicitacao), Some(licitacao)))
+
   }
 }

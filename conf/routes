@@ -1,14 +1,18 @@
 # Página inicial
-GET     /                           controllers.Application.index
+GET     /                           		controllers.Application.index
 
-GET		/adicionar					controllers.Application.adicionar
+GET	/adicionar				controllers.Application.adicionar
 
-GET		/remover			controllers.Application.remover
+GET	/remover				controllers.Application.remover
 
-GET		/pesquisarPorId			controllers.Application.pesquisarPorId
+GET	/pesquisarPorId				controllers.Application.pesquisarPorId
 
-POST	/contato/adicione			controllers.Application.adicione
+GET	/removerProduto				controllers.Application.removerProduto
 
-POST	/contato/remova				controllers.Application.remova
+POST	/licitacao/adicione			controllers.Application.adicione
 
-POST	/contato/pesquisarPorId   controllers.Application.pesquisePorId
+POST	/licitacao/remova			controllers.Application.remova
+
+POST	/produto/pesquisarPorId			controllers.Application.pesquisePorId
+
+POST    /produto/removaProduto			controllers.Application.removaProduto

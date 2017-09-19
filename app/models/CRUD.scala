@@ -44,5 +44,11 @@ def adicioneProduto(idLicitacao: Int, produto: Produto) = {
 
   }
 
+def removaProduto(idL: Int, idP: Int) = {
+	var agendaRemovida = agenda.removaProduto(idL, idP)
 
+	BD.salve(agendaRemovida)
+
+	this.agenda = agendaRemovida
+  }
 }

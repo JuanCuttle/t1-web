@@ -28,8 +28,6 @@ case class Agenda(licitacoes: Map[Int, Licitacao] = Map()) {
 		licitacoes.contains(idLicitacao) match {
 			case false => this
 			case true => {
-				//val novaLic = licitacoes(idLicitacao).adicioneProduto(produto)
-
 				var itens = licitacoes(idLicitacao).itens
 				itens += (produto.id -> produto)
 				
@@ -37,14 +35,33 @@ case class Agenda(licitacoes: Map[Int, Licitacao] = Map()) {
 				
 				var novaLicitacao = new Licitacao(idLicitacao, licitacoes(idLicitacao).nome, itens)
 				//println(s"novaLic: ${novaLicitacao}")
-				//novaLicitacao.itens += (produto.id -> produto)
-
+				
 				this.remova(idLicitacao)
 
 				var novaLicitacoes = licitacoes + (novaLicitacao.id -> novaLicitacao)
 				Agenda(novaLicitacoes)
 			}
  		}
+	}
+
+	def removaProduto(idL: Int, idP: Int) = {
+		licitacoes.contains(idL) match {
+			case false => this
+			case true => {
+				if (licitacoes(idL).itens.contains(idP)) {
+					var itens = licitacoes(idL).itens
+					itens -= idP
+
+					var novaLicitacao = new Licitacao(idL, licitacoes(idL).nome, itens)
+
+					var novaLicitacoes = licitacoes - idL
+					Agenda(novaLicitacoes + (novaLicitacao.id -> novaLicitacao))
+				}
+				else {
+					this
+				}
+			}
+		}
 	}
 
 	def pesquisePorId(id : Int) = {
