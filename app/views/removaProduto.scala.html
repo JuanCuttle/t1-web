@@ -1,0 +1,19 @@
+@(id: Option[Int] = None, agenda: Option[models.dados.Agenda] = None)(implicit rh: RequestHeader)
+
+@tags.cabecalho("Licitação alterada")
+
+<title>T1 - Programação para Web</title>
+
+<form action="@routes.Application.removaProduto" method="post">
+	@helper.CSRF.formField
+	Id da licitação: <input type= "text" name="idLicitacao" size="2">
+	Id do produto: <input type= "text" name="idProduto" size="2">
+	<input type="submit" value="Remover">
+</form>
+
+@id match {
+		case None => {<p>Digite o nome do item</p>}
+		case Some(id) => {@tags.agendaPorId(id, agenda.get)}
+	}
+
+<a href="@routes.Application.index">[Home]</a>
