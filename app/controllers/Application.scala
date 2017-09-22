@@ -66,11 +66,18 @@ class Application @Inject() (cc: ControllerComponents) extends AbstractControlle
     val (idLicitacao, id, nome, quantidade) = form.bindFromRequest.get
     var crud = new CRUD
 
+    println(s"vai adicionar produto $id na licitacao  $idLicitacao")
     crud.adicioneProduto(idLicitacao, Produto(id, nome, quantidade))
+    println("adicionou")
 
     val licitacao = crud.pesquisePorId(idLicitacao)
 
-    Ok(views.html.pesquisaPorId(Some(idLicitacao), Some(licitacao)))
+    println(s"pesquisou licitacao : $licitacao")
+
+    println("vai montar pagina")
+    val pagina = Ok(views.html.pesquisaPorId(Some(idLicitacao), Some(licitacao)))
+    println("montou")
+    pagina
   }
 
   def removaProduto = Action { implicit request =>
