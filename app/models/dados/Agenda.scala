@@ -3,7 +3,7 @@ package models.dados
 case class Agenda(licitacoes: Map[Int, Licitacao] = Map()) {
 
 	def numLicitacoes = licitacoes.size
-	
+
 	def adicione(licitacao: Licitacao) = {
 		if (licitacoes.contains(licitacao.id))
 			this
@@ -13,7 +13,7 @@ case class Agenda(licitacoes: Map[Int, Licitacao] = Map()) {
 	}
 
 	def remova(id: Int) = {
-		
+
 		if (licitacoes.contains(id)) {
 			var novaLic = licitacoes
 			novaLic -= id
@@ -30,14 +30,12 @@ case class Agenda(licitacoes: Map[Int, Licitacao] = Map()) {
 			case true => {
 				var itens = licitacoes(idLicitacao).itens
 				itens += (produto.id -> produto)
-				
+
 				//val novaLicitacao = licitacoes(idLicitacao).copy(itens = itens)
-				
+
 				var novaLicitacao = new Licitacao(idLicitacao, licitacoes(idLicitacao).nome, itens)
 				//println(s"novaLic: ${novaLicitacao}")
 				
-				this.remova(idLicitacao)
-
 				var novaLicitacoes = licitacoes + (novaLicitacao.id -> novaLicitacao)
 				Agenda(novaLicitacoes)
 			}
@@ -65,7 +63,7 @@ case class Agenda(licitacoes: Map[Int, Licitacao] = Map()) {
 	}
 
 	def pesquisePorId(id : Int) = {
-		val licitacao = 
+		val licitacao =
 			//contatos.filter {case (nome,contato) => contato.telefone.area == area}
 			licitacoes.filter {case (id, licitacao) => licitacao.id == id}
 			//licitacoes(id)
