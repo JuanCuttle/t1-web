@@ -1,12 +1,16 @@
 package controllers
 
+import play.api.libs.json._
+import play.api.libs.json.Reads._
+import play.api.libs.functional.syntax._
+
 import play.api.mvc.{AbstractController, ControllerComponents,Action}
 import play.api.data.Form
 import play.api.data.Forms.{tuple, text, number}
 
 import javax.inject.{Singleton,Inject}
 
-import models.dados.{Agenda, Licitacao, Produto}
+import models.dados.{Agenda, Licitacao, LicitacaoBasica, Produto}
 import models.CRUD
 
 @Singleton
@@ -27,8 +31,8 @@ class Application @Inject() (cc: ControllerComponents) extends AbstractControlle
     Ok(views.html.remova())
   }
 
-  def pesquisarPorId = Action { implicit request =>
-    Ok(views.html.pesquisaPorId())
+  def adicionarProduto = Action { implicit request =>
+    Ok(views.html.adicionaProduto())
   }
 
   def removerProduto = Action { implicit request =>
@@ -59,25 +63,27 @@ class Application @Inject() (cc: ControllerComponents) extends AbstractControlle
 	Redirect(routes.Application.index)
   }
 
-  def pesquisePorId = Action { implicit request =>
+  def adicioneProduto = Action { implicit request =>
     //val form = Form("area" -> number)
 
     val form = Form(tuple("idLicitacao" -> number, "id" -> number, "nome" -> text, "quantidade" -> number))
     val (idLicitacao, id, nome, quantidade) = form.bindFromRequest.get
     var crud = new CRUD
 
-    println(s"vai adicionar produto $id na licitacao  $idLicitacao")
+    //println(s"vai adicionar produto $id na licitacao  $idLicitacao")
     crud.adicioneProduto(idLicitacao, Produto(id, nome, quantidade))
-    println("adicionou")
+    //println("adicionou")
 
     val licitacao = crud.pesquisePorId(idLicitacao)
 
-    println(s"pesquisou licitacao : $licitacao")
+    //println(s"pesquisou licitacao : $licitacao")
 
-    println("vai montar pagina")
-    val pagina = Ok(views.html.pesquisaPorId(Some(idLicitacao), Some(licitacao)))
-    println("montou")
-    pagina
+    //println("vai montar pagina")
+    
+    Ok(views.html.adicionaProduto(Some(idLicitacao), Some(licitacao)))
+
+    //println("montou")
+    //pagina
   }
 
   def removaProduto = Action { implicit request =>
@@ -88,7 +94,40 @@ class Application @Inject() (cc: ControllerComponents) extends AbstractControlle
     crud.removaProduto(idLicitacao, idProduto)
 
     val licitacao = crud.pesquisePorId(idLicitacao)
-    Ok(views.html.pesquisaPorId(Some(idLicitacao), Some(licitacao)))
+    Ok(views.html.adicionaProduto(Some(idLicitacao), Some(licitacao)))
 
+  }
+
+//  implicit val licitacaoBasicaReads = Json.reads[LicitacaoBasica]
+
+  implicit val licitacaoBasicaReads: Reads[LicitacaoBasica] = (
+	(JsPath \ "id").read[Int] and 
+	(JsPath \ "nome").read[String]
+	)(LicitacaoBasica.apply _)
+
+  implicit val licitacaoBasicaWrites: Writes[LicitacaoBasica] = (
+	(JsPath \ "id").write[Int] and 
+	(JsPath \ "nome").write[String]
+	)(unlift(LicitacaoBasica.unapply))
+
+  implicit val licBasicaWrites = Json.writes[LicitacaoBasica]
+
+  //implicit val licitacoesWrites = Json.writes[Licitacao]
+
+  def APILeilaoBasico = Action { implicit request =>
+	val crud = new CRUD
+	var jsonLeilao: JsObject = Json.toObj("")
+	//val licitacoesBasicas: List[LicitacaoBasica] = new List()
+	
+	//for((id, licitacao) <- crud.agenda.licitacoes) {
+	crud.agenda.licitacoes.map { case (id, licitacao) =>
+		//val licitacao = crud.agenda.licitacoes(id)
+		val leilaoResumido = new LicitacaoBasica(licitacao.id, licitacao.nome)
+		jsonLeilao = Json.toJson(leilaoResumido)
+		println(s"json: {$jsonLeilao}")
+	//} yield jsonLeilao
+	}
+	//jsonLeilao = Json.toJson(crud.agenda.licitacoes)
+	Ok(jsonLeilao)
   }
 }

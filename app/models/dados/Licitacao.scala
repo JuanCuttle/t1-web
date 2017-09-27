@@ -10,3 +10,5 @@ def adicioneProduto(produto: Produto) {
 		Licitacao(this.id, this.nome, novosItens)
 	}
 }
+
+case class LicitacaoBasica(id: Int, nome: String)

@@ -5,14 +5,16 @@ GET	/adicionar				controllers.Application.adicionar
 
 GET	/remover				controllers.Application.remover
 
-GET	/pesquisarPorId				controllers.Application.pesquisarPorId
+GET	/adicionarProduto			controllers.Application.adicionarProduto
 
 GET	/removerProduto				controllers.Application.removerProduto
+
+GET	/leilaoInvertido/licitacoes		controllers.Application.APILeilaoBasico
 
 POST	/licitacao/adicione			controllers.Application.adicione
 
 POST	/licitacao/remova			controllers.Application.remova
 
-POST	/produto/pesquisarPorId			controllers.Application.pesquisePorId
+POST	/produto/adicioneProduto		controllers.Application.adicioneProduto
 
 POST    /produto/removaProduto			controllers.Application.removaProduto
