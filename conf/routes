@@ -9,7 +9,7 @@ GET	/adicionarProduto			controllers.Application.adicionarProduto
 
 GET	/removerProduto				controllers.Application.removerProduto
 
-GET	/leilaoInvertido/licitacoes		controllers.Application.APILeilaoBasico
+GET	/API/licitacoes		controllers.Application.APILeilaoBasico
 
 POST	/licitacao/adicione			controllers.Application.adicione
 

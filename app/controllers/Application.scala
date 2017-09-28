@@ -116,8 +116,8 @@ class Application @Inject() (cc: ControllerComponents) extends AbstractControlle
 
   def APILeilaoBasico = Action { implicit request =>
 	val crud = new CRUD
-	var jsonLeilao: JsObject = Json.toObj("")
-	//val licitacoesBasicas: List[LicitacaoBasica] = new List()
+	//var jsonLeilao: JsObject = Json.toObj("")
+	var jsonLeilao: JsValue = Json.toJson("")
 	
 	//for((id, licitacao) <- crud.agenda.licitacoes) {
 	crud.agenda.licitacoes.map { case (id, licitacao) =>
