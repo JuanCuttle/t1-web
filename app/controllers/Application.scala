@@ -114,10 +114,19 @@ class Application @Inject() (cc: ControllerComponents) extends AbstractControlle
 
   //implicit val licitacoesWrites = Json.writes[Licitacao]
 
+  implicit val produtoWrites = new Writes[Produto] {
+	def writes(produto: Produto) = Json.obj(
+		"id" -> produto.id,
+		"nome" -> produto.nome,
+		"numero" -> produto.numero
+	)
+  }
+
   implicit val licitacaoWrites = new Writes[Licitacao] {
 	def writes(licitacao: Licitacao) = Json.obj(
 		"id" -> licitacao.id,
-		"nome" -> licitacao.nome
+		"nome" -> licitacao.nome,
+		"itens" -> licitacao.itens
 	)
   }
 
