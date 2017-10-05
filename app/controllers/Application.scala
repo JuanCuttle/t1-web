@@ -114,19 +114,25 @@ class Application @Inject() (cc: ControllerComponents) extends AbstractControlle
 
   //implicit val licitacoesWrites = Json.writes[Licitacao]
 
+  implicit val licitacaoWrites = new Writes[Licitacao] {
+	def writes(licitacao: Licitacao) = Json.obj(
+		"id" -> licitacao.id,
+		"nome" -> licitacao.nome
+	)
+  }
+
   def APILeilaoBasico = Action { implicit request =>
 	val crud = new CRUD
 	//var jsonLeilao: JsObject = Json.toObj("")
-	var jsonLeilao: JsValue = Json.toJson("")
+	//var jsonLeilao: JsValue = Json.toJson("")
+	var jsonLeilao = Json.toJson(crud.agenda.licitacoes.values)
 	
-	//for((id, licitacao) <- crud.agenda.licitacoes) {
-	crud.agenda.licitacoes.map { case (id, licitacao) =>
+	//crud.agenda.licitacoes.map { case (id, licitacao) =>
 		//val licitacao = crud.agenda.licitacoes(id)
-		val leilaoResumido = new LicitacaoBasica(licitacao.id, licitacao.nome)
-		jsonLeilao = Json.toJson(leilaoResumido)
+		//val leilaoResumido = new LicitacaoBasica(licitacao.id, licitacao.nome)
+		//jsonLeilao = Json.toJson(leilaoResumido)
 		println(s"json: {$jsonLeilao}")
-	//} yield jsonLeilao
-	}
+	//}
 	//jsonLeilao = Json.toJson(crud.agenda.licitacoes)
 	Ok(jsonLeilao)
   }
