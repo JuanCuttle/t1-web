@@ -4,17 +4,21 @@ import play.api.libs.json._
 import play.api.libs.json.Reads._
 import play.api.libs.functional.syntax._
 
+import play.api.libs.ws.WSClient
+
 import play.api.mvc.{AbstractController, ControllerComponents,Action}
 import play.api.data.Form
 import play.api.data.Forms.{tuple, text, number}
 
 import javax.inject.{Singleton,Inject}
 
+import scala.concurrent.{Future, ExecutionContext}
+
 import models.dados.{Agenda, Licitacao, LicitacaoBasica, Produto}
 import models.CRUD
 
 @Singleton
-class Application @Inject() (cc: ControllerComponents) extends AbstractController(cc) {
+class Application @Inject() (ws: WSClient, cc: ControllerComponents) (implicit ec: ExecutionContext) extends AbstractController(cc) {
 
   def index = Action {
     val crud = new CRUD
@@ -32,6 +36,7 @@ class Application @Inject() (cc: ControllerComponents) extends AbstractControlle
   }
 
   def adicionarProduto = Action { implicit request =>
+    val futProdutos = buscarProdutosValidos
     Ok(views.html.adicionaProduto())
   }
 
@@ -132,17 +137,33 @@ class Application @Inject() (cc: ControllerComponents) extends AbstractControlle
 
   def APILeilaoBasico = Action { implicit request =>
 	val crud = new CRUD
-	//var jsonLeilao: JsObject = Json.toObj("")
+
 	//var jsonLeilao: JsValue = Json.toJson("")
+
 	var jsonLeilao = Json.toJson(crud.agenda.licitacoes.values)
 	
 	//crud.agenda.licitacoes.map { case (id, licitacao) =>
 		//val licitacao = crud.agenda.licitacoes(id)
 		//val leilaoResumido = new LicitacaoBasica(licitacao.id, licitacao.nome)
 		//jsonLeilao = Json.toJson(leilaoResumido)
-		println(s"json: {$jsonLeilao}")
+	println(s"json: {$jsonLeilao}")
+
 	//}
-	//jsonLeilao = Json.toJson(crud.agenda.licitacoes)
+	
 	Ok(jsonLeilao)
+  }
+
+  private def buscarProdutosValidos = {
+	val servico = ws.url(definaEndereco)
+	val futureResposta = servico.get
+
+	futureResposta.map { resposta => 
+		val jsonProdutos = (resposta.json)
+		println(jsonProdutos)
+	}
+  }
+
+  private def definaEndereco = {
+	"http://produtos.g.schiar.vms.ufsc.br:3000/produtos.json"
   }
 }

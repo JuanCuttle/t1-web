@@ -6,6 +6,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
 scalaVersion := "2.12.2"
 
-libraryDependencies ++= Seq(guice)
+libraryDependencies ++= Seq(ws, guice)
+libraryDependencies += "com.typesafe.play" %% "play-ws" % "2.4.3"
 
 routesGenerator := InjectedRoutesGenerator
