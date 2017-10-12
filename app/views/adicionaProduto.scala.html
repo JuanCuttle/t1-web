@@ -1,4 +1,4 @@
-@(id: Option[Int] = None, agenda: Option[models.dados.Agenda] = None)(implicit rh: RequestHeader)
+@(produtosValidos: Map[Int, models.dados.ProdutoCompleto], id: Option[Int] = None, agenda: Option[models.dados.Agenda] = None)(implicit rh: RequestHeader)
 
 @tags.cabecalho("Licitação alterada")
 
@@ -12,6 +12,9 @@
 	Quantidade: <input type= "text" name="quantidade" size="5">
 	<input type="submit" value="Adicionar">
 </form>
+
+
+@tags.mostraProdutosDisponiveis(produtosValidos)
 
 @id match {
 		case None => {<p>Digite o nome do item</p>}

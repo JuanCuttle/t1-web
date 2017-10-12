@@ -14,7 +14,7 @@ import javax.inject.{Singleton,Inject}
 
 import scala.concurrent.{Future, ExecutionContext}
 
-import models.dados.{Agenda, Licitacao, LicitacaoBasica, Produto}
+import models.dados.{Agenda, Licitacao, LicitacaoBasica, Produto, ProdutoCompleto}
 import models.CRUD
 
 @Singleton
@@ -35,9 +35,12 @@ class Application @Inject() (ws: WSClient, cc: ControllerComponents) (implicit e
     Ok(views.html.remova())
   }
 
-  def adicionarProduto = Action { implicit request =>
-    val futProdutos = buscarProdutosValidos
-    Ok(views.html.adicionaProduto())
+  def adicionarProduto = Action.async { implicit request =>
+    val futProdutos =  buscarProdutosValidos 
+    //val produtos = buscarProdutosValidos
+    futProdutos.map { produtos => 
+	Ok(views.html.adicionaProduto(produtos))
+    }
   }
 
   def removerProduto = Action { implicit request =>
@@ -68,7 +71,7 @@ class Application @Inject() (ws: WSClient, cc: ControllerComponents) (implicit e
 	Redirect(routes.Application.index)
   }
 
-  def adicioneProduto = Action { implicit request =>
+  def adicioneProduto = Action.async { implicit request =>
     //val form = Form("area" -> number)
 
     val form = Form(tuple("idLicitacao" -> number, "id" -> number, "nome" -> text, "quantidade" -> number))
@@ -84,14 +87,17 @@ class Application @Inject() (ws: WSClient, cc: ControllerComponents) (implicit e
     //println(s"pesquisou licitacao : $licitacao")
 
     //println("vai montar pagina")
-    
-    Ok(views.html.adicionaProduto(Some(idLicitacao), Some(licitacao)))
+
+    val futProdutos =  buscarProdutosValidos
+    futProdutos.map { produtos =>
+	    Ok(views.html.adicionaProduto(produtos, Some(idLicitacao), Some(licitacao)))
+    }
 
     //println("montou")
     //pagina
   }
 
-  def removaProduto = Action { implicit request =>
+  def removaProduto = Action.async { implicit request =>
     val form = Form(tuple("idLicitacao" -> number, "idProduto" -> number))
     val (idLicitacao, idProduto) = form.bindFromRequest.get
     var crud = new CRUD
@@ -99,11 +105,15 @@ class Application @Inject() (ws: WSClient, cc: ControllerComponents) (implicit e
     crud.removaProduto(idLicitacao, idProduto)
 
     val licitacao = crud.pesquisePorId(idLicitacao)
-    Ok(views.html.adicionaProduto(Some(idLicitacao), Some(licitacao)))
+
+    val futProdutos =  buscarProdutosValidos
+    futProdutos.map { produtos => 
+    	Ok(views.html.adicionaProduto(produtos, Some(idLicitacao), Some(licitacao)))
+    }
 
   }
 
-//  implicit val licitacaoBasicaReads = Json.reads[LicitacaoBasica]
+  implicit val produtoReads = Json.reads[ProdutoCompleto]
 
   implicit val licitacaoBasicaReads: Reads[LicitacaoBasica] = (
 	(JsPath \ "id").read[Int] and 
@@ -157,10 +167,26 @@ class Application @Inject() (ws: WSClient, cc: ControllerComponents) (implicit e
 	val servico = ws.url(definaEndereco)
 	val futureResposta = servico.get
 
+	var mapaProdutos: Map[Int, ProdutoCompleto] = Map()
+
 	futureResposta.map { resposta => 
 		val jsonProdutos = (resposta.json)
-		println(jsonProdutos)
+		//println(jsonProdutos)
+		val produtos = jsonProdutos.asOpt[List[ProdutoCompleto]]
+		val listaProdutos = produtos.get
+
+		//var mapaProdutos: Map[Int, ProdutoCompleto] = Map()
+
+		for(produto <- listaProdutos) {
+			mapaProdutos += (produto.id -> produto)
+		}
+		
+		println(mapaProdutos)
+		mapaProdutos
 	}
+
+	//println(mapaProdutos)
+	//mapaProdutos
   }
 
   private def definaEndereco = {
