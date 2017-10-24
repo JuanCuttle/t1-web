@@ -1,7 +1,7 @@
 @* form Template File *@
 @(usuario: models.oauth2.Usuario, resultado: Option[models.Resposta] = None)
 
-@main("Pesquisar") {
+
 	<h1>INE5646 - Origem Destino</h1>
 	<p>Usuário: @usuario.nome <img src="@usuario.pic"></p>
 	<form action="@routes.Application.processe" method="post">
@@ -24,5 +24,4 @@
 		
    <form action="@routes.Application.sair" method="post">
 	  <button>Sair</button>
-   </form>		
-}
+   </form>

@@ -9,7 +9,9 @@ GET	/adicionarProduto			controllers.Application.adicionarProduto
 
 GET	/removerProduto				controllers.Application.removerProduto
 
-GET	/API/licitacoes		controllers.Application.APILeilaoBasico
+GET	/API/licitacoes				controllers.Application.APILeilaoBasico
+
+GET	/callback				controllers.Application.callback
 
 POST	/licitacao/adicione			controllers.Application.adicione
 
@@ -18,3 +20,9 @@ POST	/licitacao/remova			controllers.Application.remova
 POST	/produto/adicioneProduto		controllers.Application.adicioneProduto
 
 POST    /produto/removaProduto			controllers.Application.removaProduto
+
+POST	/processe				controllers.Application.processe
+
+POST	/sair					controllers.Application.sair
+
+GET	/assets/*file				controllers.Assets.at(path="/public", file)
