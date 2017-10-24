@@ -1,0 +1,28 @@
+@* form Template File *@
+@(usuario: models.oauth2.Usuario, resultado: Option[models.Resposta] = None)
+
+@main("Pesquisar") {
+	<h1>INE5646 - Origem Destino</h1>
+	<p>Usuário: @usuario.nome <img src="@usuario.pic"></p>
+	<form action="@routes.Application.processe" method="post">
+	  <input type="text" name="origem" placeholder="digite a origem">
+	  <input type="text" name="destino" placeholder="digite o destino">
+	  <button>Calcule</button>
+	</form>
+	
+	@resultado match {
+		case None => {<p>Preencha o formulário</p>}
+		case Some(r) => {
+		<h3>De: @r.origem <br>Até: @r.destino</h3>
+		 @r.optDistancia match {
+		 	case None => {<p>Não foi possível determinar a distância nem o tempo</p>}
+		 	case _ => {<p>Distância: @r.optDistanciaKm <br>Tempo:  @r.optTempoHoras.get</p>}
+		 }   
+		
+		}
+	}
+		
+   <form action="@routes.Application.sair" method="post">
+	  <button>Sair</button>
+   </form>		
+}

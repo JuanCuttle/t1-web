@@ -17,14 +17,74 @@ import scala.concurrent.{Future, ExecutionContext}
 import models.dados.{Agenda, Licitacao, LicitacaoBasica, Produto, ProdutoCompleto}
 import models.CRUD
 
+import models.Resposta
+import models.oauth2.Usuario
+import models.oauth2.GoogleOAuth2
+import models.Pesquisador
+
 @Singleton
 class Application @Inject() (ws: WSClient, cc: ControllerComponents) (implicit ec: ExecutionContext) extends AbstractController(cc) {
+
+  var usuarios = Map[String, Usuario]()
+  val googleOAuth2 = new GoogleOAuth2(ws)
+  val pesquisador = new Pesquisador(ws)
 
   def index = Action {
     val crud = new CRUD
     val agenda = crud.pesquiseTodos
 
-    Ok(views.html.index(agenda))
+    Ok(views.html.index(agenda, googleOAuth2.loginURL)).withNewSession
+  }
+
+  def callback = Action.async { implicit request =>
+    val optCode = request.getQueryString("code")
+    optCode match {
+      case None => Future.successful(Redirect(routes.Application.index).withNewSession)
+      case Some(code) => {
+        googleOAuth2.usuario(code).map(optUsuario => {
+          optUsuario match {
+            case None => Redirect(routes.Application.index).withNewSession
+            case Some(usuario) => {
+                usuarios += usuario.chave -> usuario
+                Ok(views.html.form(usuario)).withSession("chave" -> usuario.chave)
+            }
+          }
+        })
+      }
+    }
+  }
+
+  def processe = Action.async { request =>
+    obtenhaEValideChave(request) match {
+      case None => Future.successful(Redirect(routes.Application.index).withNewSession)
+      case Some(chave) => {
+        val origem = request.body.asFormUrlEncoded.get("origem").head
+        val destino = request.body.asFormUrlEncoded.get("destino").head
+        (origem.length, destino.length) match {
+          case (a,b) if (a > 0 && b > 0) => pesquisador.pesquise(origem, destino).map(resposta => Ok(views.html.form(usuarios(chave), Some(resposta))))
+          case _ => Future.successful(Ok(views.html.form(usuarios(chave), None)))
+        }
+      }
+    }
+  }
+
+  def sair = Action.async { request =>
+    obtenhaEValideChave(request) match {
+      case None => Future.successful(Redirect(routes.Application.index).withNewSession)
+      case Some(chave) => {
+        val usuario = usuarios(chave)
+        val at = usuario.at
+        val url = s"https://accounts.google.com/o/oauth2/revoke?token=$at"
+        usuarios -= chave
+        ws.url(url).get.map (_ => Redirect(routes.Application.index).withNewSession)
+      }
+    }
+  }
+
+  private def obtenhaEValideChave (request: play.api.mvc.Request[_]) = {
+    val optChave = request.session.get("chave")
+
+    if (optChave.isEmpty || !usuarios.contains(optChave.get)) None else optChave
   }
 
   def adicionar = Action { implicit request =>
