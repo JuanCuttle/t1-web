@@ -14,9 +14,9 @@ class GoogleOAuth2 (ws: WSClient) (implicit ec: ExecutionContext) extends OAuth2
   // https://console.developers.google.com/project
   //
 
-  override val clientID = "escreva o seu Client ID"
-  override val clientSecret = "escreva o seu Client Secret"
-  override val callbackURL = "http://localhost:9000/callback"
+  override val clientID = "369245496841-s8bdoicrc2tcf869qr9m632hsv3hp1mn.apps.googleusercontent.com"
+  override val clientSecret = "oP-y6r6RBYNs_FAb7PWs67kE"
+  override val callbackURL = "http://web.juan.cuttle.vms.ufsc.br:9000/callback"
   override val loginURL = s"https://accounts.google.com/o/oauth2/auth?client_id=$clientID&response_type=code&scope=openid email&redirect_uri=$callbackURL"
 
 
