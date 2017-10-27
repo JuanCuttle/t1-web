@@ -46,7 +46,9 @@ class Application @Inject() (ws: WSClient, cc: ControllerComponents) (implicit e
             case None => Redirect(routes.Application.index).withNewSession
             case Some(usuario) => {
                 usuarios += usuario.chave -> usuario
-                Ok(views.html.form(usuario)).withSession("chave" -> usuario.chave)
+		val crud = new CRUD
+		val agenda = crud.pesquiseTodos
+                Ok(views.html.index1(agenda)).withSession("chave" -> usuario.chave)
             }
           }
         })
