@@ -1,6 +1,8 @@
 # Página inicial
 GET     /                           		controllers.Application.index
 
+GET	/aplicacao				controllers.Application.index1
+
 GET	/adicionar				controllers.Application.adicionar
 
 GET	/remover				controllers.Application.remover

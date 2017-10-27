@@ -33,9 +33,15 @@ class Application @Inject() (ws: WSClient, cc: ControllerComponents) (implicit e
     val crud = new CRUD
     val agenda = crud.pesquiseTodos
 
-    Ok(views.html.index(agenda, googleOAuth2.loginURL)).withNewSession
+    Ok(views.html.index0(agenda, googleOAuth2.loginURL)).withNewSession
   }
 
+  def index1 = Action {
+    val crud = new CRUD
+    val agenda = crud.pesquiseTodos
+
+    Ok(views.html.index(agenda))
+  }
   def callback = Action.async { implicit request =>
     val optCode = request.getQueryString("code")
     optCode match {
@@ -48,7 +54,7 @@ class Application @Inject() (ws: WSClient, cc: ControllerComponents) (implicit e
                 usuarios += usuario.chave -> usuario
 		val crud = new CRUD
 		val agenda = crud.pesquiseTodos
-                Ok(views.html.index1(agenda)).withSession("chave" -> usuario.chave)
+                Ok(views.html.index(agenda)).withSession("chave" -> usuario.chave)
             }
           }
         })
@@ -121,7 +127,7 @@ class Application @Inject() (ws: WSClient, cc: ControllerComponents) (implicit e
 
 	crud.adicione(Licitacao(id, nome))
 
-  	Redirect(routes.Application.index)
+  	Redirect(routes.Application.index1)
   }
 
   def remova = Action {implicit request =>
@@ -130,7 +136,7 @@ class Application @Inject() (ws: WSClient, cc: ControllerComponents) (implicit e
 	val crud = new CRUD
 	crud.remova(id)
 
-	Redirect(routes.Application.index)
+	Redirect(routes.Application.index1)
   }
 
   def adicioneProduto = Action.async { implicit request =>

@@ -1,0 +1,10 @@
+@(agenda: models.dados.Agenda, loginURL: String)
+
+@tags.cabecalho("Lista de ativas")
+
+@tags.mostraAgenda(agenda)
+
+<title>T1 - Programação para Web</title>
+<a href="@loginURL">
+  Login<img src="@routes.Assets.at("images/google.png")"
+</a>
