@@ -5,6 +5,7 @@ import play.api.libs.json.Reads._
 import play.api.libs.functional.syntax._
 
 import play.api.libs.ws.WSClient
+import play.api.libs.ws.WSAuthScheme
 
 import play.api.mvc.{AbstractController, ControllerComponents,Action}
 import play.api.data.Form
@@ -232,13 +233,22 @@ class Application @Inject() (ws: WSClient, cc: ControllerComponents) (implicit e
   }
 
   private def buscarProdutosValidos = {
-	val servico = ws.url(definaEndereco)
+	var servico = ws.url(definaEndereco)
+
+	//servico = servico.withHttpHeaders(("juan@cuttle.br", "123456"))
+	//servico = servico.addHttpHeaders(("Authorization", "juan@cuttle.br"))
+	
+	servico = servico.withAuth("juan@cuttle.br", "123456", WSAuthScheme.BASIC)
+
 	val futureResposta = servico.get
+	//println(futureResposta)
 
 	var mapaProdutos: Map[Int, ProdutoCompleto] = Map()
 
 	futureResposta.map { resposta => 
+		println(resposta)
 		val jsonProdutos = (resposta.json)
+		
 		//println(jsonProdutos)
 		val produtos = jsonProdutos.asOpt[List[ProdutoCompleto]]
 		val listaProdutos = produtos.get
@@ -258,6 +268,6 @@ class Application @Inject() (ws: WSClient, cc: ControllerComponents) (implicit e
   }
 
   private def definaEndereco = {
-	"http://produtos.g.schiar.vms.ufsc.br:3000/produtos.json"
+	"http://produtos.g.schiar.vms.ufsc.br:3000/products.json"
   }
 }
