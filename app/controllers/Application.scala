@@ -23,12 +23,19 @@ import models.oauth2.Usuario
 import models.oauth2.GoogleOAuth2
 import models.Pesquisador
 
+import org.mongodb.scala._
+import com.mongodb._
+
 @Singleton
 class Application @Inject() (ws: WSClient, cc: ControllerComponents) (implicit ec: ExecutionContext) extends AbstractController(cc) {
 
   var usuarios = Map[String, Usuario]()
   val googleOAuth2 = new GoogleOAuth2(ws)
   val pesquisador = new Pesquisador(ws)
+
+  val mongoClient: MongoClient = MongoClient()
+  val database: MongoDatabase = mongoClient.getDatabase("db")
+  val collection: MongoCollection[Document] = database.getCollection("Licitacoes")
 
   def index = Action {
     val crud = new CRUD
@@ -105,7 +112,7 @@ class Application @Inject() (ws: WSClient, cc: ControllerComponents) (implicit e
   }
 
   def adicionarProduto = Action.async { implicit request =>
-    val futProdutos =  buscarProdutosValidos 
+    val futProdutos =  buscarProdutosValidos
     //val produtos = buscarProdutosValidos
     futProdutos.map { produtos => 
 	Ok(views.html.adicionaProduto(produtos))
@@ -127,6 +134,15 @@ class Application @Inject() (ws: WSClient, cc: ControllerComponents) (implicit e
   	//crud.adicione(Contato(nome, Telefone(area, numero), idade))
 
 	crud.adicione(Licitacao(id, nome))
+
+	//val document: Document = Document("id" -> id, "nome" -> nome)
+	//collection.insertOne(document)
+
+	
+	//println(collection.find().subscribe((doc: Document) => println(doc.toJson()),
+	//					(e: Throwable) => println(s"Erro: $e")))
+	//println(collection.find().subscribe(new Observer))
+	//collection.find(Document())
 
   	Redirect(routes.Application.index1)
   }
